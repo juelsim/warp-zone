@@ -3,8 +3,8 @@
 Three pages, in the order people see them:
 
 1. `index.html` is the game.
-2. `book.html` is the booking page (calculator, form, Calendly).
-3. `before-your-call.html` is Simon's pre-call page. People land here after they book.
+2. `book.html` is the booking page (calculator, form, Calendly). Owners book a 45-minute call with Juel here.
+3. `before-your-call.html` is Simon's pre-call page. Juel sends the link once an owner is booked in with Simon.
 
 ## Editing wording
 

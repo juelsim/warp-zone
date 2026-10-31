@@ -30,8 +30,36 @@ function doPost(e) {
       const v = data[k] == null ? '' : data[k];
       return typeof v === 'string' && /^[=+\-@]/.test(v) ? "'" + v : v;
     }));
+    try { sendAlert(data); } catch (err) { console.error(err); }
     return ContentService.createTextOutput('ok');
   } finally {
     lock.releaseLock();
   }
+}
+
+// Emails each new lead. Change ALERT_TO to send it somewhere else; separate several addresses with commas.
+const ALERT_TO = 'juel@warp.sg';
+
+function sendAlert(d) {
+  const arr = d.arr ? 'S$' + Number(d.arr).toLocaleString('en-SG') : 'not given';
+  const lines = [
+    'Name: ' + (d.name || ''),
+    'Centre: ' + (d.centre || ''),
+    'WhatsApp: ' + (d.whatsapp || ''),
+    'Email: ' + (d.email || ''),
+    'Type: ' + (d.centre_type || ''),
+    'Centres: ' + (d.centres || ''),
+    'Students: ' + (d.students || ''),
+    'Monthly fee: ' + (d.monthly_fee ? 'S$' + d.monthly_fee : ''),
+    'Yearly revenue: ' + arr,
+    'Came from: ' + (d.src || '') + (d.utm_campaign ? ' / ' + d.utm_campaign : ''),
+    '',
+    'All leads: ' + SpreadsheetApp.getActiveSpreadsheet().getUrl()
+  ];
+  MailApp.sendEmail(ALERT_TO, 'New lead: ' + (d.name || '?') + ', ' + (d.centre || '?'), lines.join('\n'));
+}
+
+// Run this once from the editor to approve email sending and get a sample alert.
+function testAlert() {
+  sendAlert({ name: 'TEST', centre: 'Alert check', src: 'Apps Script editor' });
 }
